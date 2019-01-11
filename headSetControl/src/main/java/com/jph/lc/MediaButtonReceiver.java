@@ -1,4 +1,7 @@
-package com.example.mytoast;
+package com.jph.lc;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -8,8 +11,7 @@ import android.os.Message;
 import android.util.Log;
 import android.view.KeyEvent;
 
-import java.util.Timer;
-import java.util.TimerTask;
+import com.jph.lc.HeadSetUtil.OnHeadSetListener;
 
 /**
  * MEDIA_BUTTON耳机媒体按键广播接收器
@@ -19,7 +21,7 @@ import java.util.TimerTask;
 public class MediaButtonReceiver extends BroadcastReceiver{
 
 	private Timer timer = null;
-	private HeadSetUtil.OnHeadSetListener headSetListener = null;
+	private OnHeadSetListener headSetListener = null;
 	private static MTask myTimer = null;
 	/**单击次数**/
 	private static int clickCount;
@@ -52,7 +54,7 @@ public class MediaButtonReceiver extends BroadcastReceiver{
 					}
 	        	}	
 	        }
-	       // abortBroadcast();//终止广播(不让别的程序收到此广播，免受干扰)
+	        abortBroadcast();//终止广播(不让别的程序收到此广播，免受干扰)  
 	}
 	/**
 	 * 定时器，用于延迟1秒，判断是否会发生双击和三连击
