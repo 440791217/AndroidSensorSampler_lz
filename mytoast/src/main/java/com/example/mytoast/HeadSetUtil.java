@@ -44,6 +44,7 @@ public class HeadSetUtil {
 				MediaButtonReceiver.class.getName());
 		audioManager.registerMediaButtonEventReceiver(name);
 		Log.i("ksdinf", "open");
+
 	}
 	/**
 	 * 关闭耳机线控监听	

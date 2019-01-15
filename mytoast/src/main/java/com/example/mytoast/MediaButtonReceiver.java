@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.widget.Toast;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -32,7 +33,10 @@ public class MediaButtonReceiver extends BroadcastReceiver{
 		Log.i("ksdinf", "onReceive");
 		 String intentAction = intent.getAction() ;
 	        if(Intent.ACTION_MEDIA_BUTTON.equals(intentAction)){
-	        	KeyEvent keyEvent = (KeyEvent)intent.getParcelableExtra(Intent.EXTRA_KEY_EVENT); //获得KeyEvent对象  
+				Toast.makeText(context,"1235",Toast.LENGTH_SHORT).show();
+	        	KeyEvent keyEvent = (KeyEvent)intent.getParcelableExtra(Intent.EXTRA_KEY_EVENT); //获得KeyEvent对象
+				int keyCode = keyEvent.getKeyCode();
+				Log.e("mark","code:"+keyCode);
 	        	if(headSetListener != null){
 	        		try {
 	        			if(keyEvent.getAction() == KeyEvent.ACTION_UP){
