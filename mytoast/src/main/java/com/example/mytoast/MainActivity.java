@@ -2,6 +2,7 @@ package com.example.mytoast;
 
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.media.AudioManager;
 import android.media.session.MediaSession;
 import android.os.Bundle;
@@ -15,7 +16,8 @@ public class MainActivity extends AppCompatActivity {
     ComponentName mAudioComponentName;
     Context mContext;
     private MediaSession mSession;
-//    Tag="mark";
+    String Tag = "mark";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,16 +31,60 @@ public class MainActivity extends AppCompatActivity {
         mAudioManager.registerMediaButtonEventReceiver(mAudioComponentName);  //方法过时
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        createMediaSession();
+    }
 
-//    private void createMediaSession() {
-//    Log.v(Tag, "createMediaSession() mSession= " + mSession);
-//    if (mSession == null) {
-//    mSession = new MediaSession(mContext, VideoPlayerActivity.class.getSimpleName());
-//    mSession.setCallback(mSessionCallback);
-//    mSession.setFlags(MediaSession.FLAG_HANDLES_MEDIA_BUTTONS);
-//    mSession.setActive(true);
-//    }
-//    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        releaseMediaSession();
+    }
+
+    //在OnResume中使用createMediaSession()方法create
+    private void createMediaSession() {
+        Log.v(Tag, "createMediaSession() mSession= " + mSession);
+        if (mSession == null) {
+            mSession = new MediaSession(mContext, MainActivity.class.getSimpleName());
+            mSession.setCallback(mSessionCallback);
+            mSession.setFlags(MediaSession.FLAG_HANDLES_MEDIA_BUTTONS);
+            mSession.setActive(true);
+        }
+    }
+
+    //在OnPause中使用releaseMediaSession()方法release
+    private void releaseMediaSession() {
+        Log.v(Tag, "releaseMediaSession() mSession=" + mSession);
+        if (mSession != null) {
+            mSession.setCallback(null);
+            mSession.setActive(false);
+            mSession.release();
+            mSession = null;
+        }
+    }
+
+    private final MediaSession.Callback mSessionCallback = new MediaSession.Callback() {
+        @Override
+        public boolean onMediaButtonEvent(Intent mediaIntent) {
+            if (mSession == null || mediaIntent == null) {
+                Log.v(Tag, "SessionCallback mSession= " + mSession + "mediaIntent= " + mediaIntent);
+                return false;
+            }
+            if (Intent.ACTION_MEDIA_BUTTON.equals(mediaIntent.getAction())) {
+                KeyEvent event = (KeyEvent) mediaIntent.getParcelableExtra(Intent.EXTRA_KEY_EVENT);
+                Log.v(Tag, "SessionCallback event= " + event);
+                if (event != null && event.getAction() == KeyEvent.ACTION_DOWN) {
+                    onKeyDown(event.getKeyCode(), event);
+                    onKeyUp(event.getKeyCode(), event);
+                    return true;
+                }
+            }
+            return false;
+        }
+    };
+
 
 
     @Override

@@ -1,2 +1,2 @@
-include ':app', ':mytoast'
+include ':app', ':mytoast', ':blue', ':media'
 
